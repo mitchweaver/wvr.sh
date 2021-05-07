@@ -1,0 +1,16 @@
+out
+wiki
+
+*~*
+*~
+*.core
+
+*.log
+*.key
+*.pem
+*.crt
+*.pub
+
+*token*
+*cookie*
+*cache*
