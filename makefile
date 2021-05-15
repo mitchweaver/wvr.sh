@@ -1,21 +1,18 @@
+tmp = /tmp/wvr.sh
 SSH_HOST = wvr
 WWW_DIR = /var/www/html
 
 all:
-	mkdir -p out
-	./bin/mkpage.sh src/index.md
-	cp -rf res out/
+	rm -r out 2>/dev/null ||:
+	cp -rf src out
 
-clean:
-	rm -r out wiki 2>/dev/null ||:
+copy: all
+	rm -r ${tmp} 2>/dev/null ||:
+	cp -r src ${tmp}
 
-view: all
-	cp -rf out ~/tmp/
-	brws ~/tmp/out/index.html
+view: copy
+	${BROWSER} ${tmp}/index.html &
 
-wiki: all
-	./bin/mkwiki.sh
-
-push:
-	rsync -rvhtu --progress --delete out/ ${SSH_HOST}:${WWW_DIR}
+push: all
+	openrsync -avlprt --del out/ ${SSH_HOST}:${WWW_DIR}
 	ssh ${SSH_HOST} chmod -R 0755 ${WWW_DIR} ${WWW_DIR}/res
